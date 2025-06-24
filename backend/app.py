@@ -36,6 +36,9 @@ def shutdown():
         producer.close()
         app.logger.info("Kafka producer closed.")
 
+# Tajni token za autorizaciju
+SECRET_TOKEN = "tajni_token_za_prijavljene"
+
 # ------------------ ROUTES ------------------
 
 @app.route('/register', methods=['POST'])
@@ -136,6 +139,40 @@ def load_events():
     except Exception as e:
         app.logger.error(f"Error loading events from file: {str(e)}")
         return jsonify({"message": f"Error loading events from file: {str(e)}"}), 500
+
+# Nova ruta za brisanje događaja sa autorizacijom
+@app.route('/delete_event', methods=['POST'])
+def delete_event():
+    auth_header = request.headers.get('Authorization')
+    if auth_header != f"Bearer {SECRET_TOKEN}":
+        return jsonify({"message": "Unauthorized"}), 401
+
+    data = request.get_json()
+    event_name = data.get('event_name')
+    if not event_name:
+        return jsonify({"message": "Event name is required"}), 400
+
+    try:
+        # Dohvati sve događaje
+        events = r.lrange("events", 0, -1)
+        removed = False
+
+        for event_json in events:
+            event = json.loads(event_json)
+            if event.get('event_name') == event_name:
+                # Ukloni točnu vrijednost iz Redis liste
+                r.lrem("events", 1, event_json)
+                removed = True
+                break
+
+        if removed:
+            return jsonify({"message": f"Događaj '{event_name}' je obrisan."}), 200
+        else:
+            return jsonify({"message": "Događaj nije pronađen."}), 404
+
+    except Exception as e:
+        app.logger.error(f"Error deleting event: {str(e)}")
+        return jsonify({"message": f"Error deleting event: {str(e)}"}), 500
 
 
 @app.errorhandler(404)
