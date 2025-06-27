@@ -1,6 +1,6 @@
-# Event Radar
+# Posusko lito
 
-Event Radar je aplikacija za upravljanje i prikaz događaja u stvarnom vremenu.  
+Posusko lito je aplikacija za upravljanje i prikaz događaja u stvarnom vremenu.  
 Koristi Apache Kafka, Redis i Docker za backend, te React za frontend.  
 Podržava korisničku registraciju, prijavu i upravljanje događajima.
 
