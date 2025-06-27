@@ -18,9 +18,23 @@ Podržava korisničku registraciju, prijavu i upravljanje događajima.
 
 ## Pokretanje aplikacije
 
-1. Kloniraj repozitorij i uđi u direktorij projekta.
-2. Pokreni Docker kontejnere (backend, frontend, Kafka, Redis, itd.):
+git clone https://github.com/AntonelaGalicc/Posusko_lito.git
+cd Posusko_lito
 
-```bash
 docker-compose up --build
-```
+
+---
+
+## Primjer korisničkih podataka za demo
+
+Email: admin@gmail.com
+Lozinka: admin123
+
+Email: test@gmail.com
+Lozinka: test123
+
+---
+
+## Poveznica na aplikaciju
+http://158.179.216.162:3000/
+
