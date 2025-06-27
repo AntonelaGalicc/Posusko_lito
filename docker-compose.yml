@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   zookeeper:
@@ -12,20 +12,20 @@ services:
       - event-radar-network
 
   kafka:
-    image: confluentinc/cp-kafka:7.5.1
-    ports:
-      - "9092:9092"
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    depends_on:
-      - zookeeper
-    networks:
-      - event-radar-network
+  image: confluentinc/cp-kafka:7.5.1
+  ports:
+    - "9092:9092"
+  environment:
+    KAFKA_BROKER_ID: 1
+    KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+    KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+    KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:29092
+    KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+  depends_on:
+    - zookeeper
+  networks:
+    - event-radar-network
 
   redis:
     image: redis
@@ -45,6 +45,8 @@ services:
       - event-radar-network
 
   frontend:
+    environment:
+      - REACT_APP_API_URL=http://158.179.216.162:5000
     build: ./frontend
     ports:
       - "3000:3000"
@@ -54,6 +56,8 @@ services:
       - backend
     networks:
       - event-radar-network
+    env_file:
+      - ./frontend/.env
 
 networks:
   event-radar-network:

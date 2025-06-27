@@ -8,11 +8,16 @@ import logging
 import atexit
 
 app = Flask(__name__)
-CORS(app)
+
+#  Omogući CORS za tvoj frontend
+CORS(app, resources={r"/*": {"origins": "http://158.179.216.162:3000"}}, supports_credentials=True)
 
 logging.basicConfig(level=logging.INFO)
+
+# Redis setup
 r = redis.Redis(host='redis', port=6379, db=0, decode_responses=True)
 
+# Kafka setup
 KAFKA_TOPIC = "events"
 producer = None
 try:

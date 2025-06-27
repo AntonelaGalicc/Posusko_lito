@@ -9,6 +9,8 @@ import {
 } from "react-router-dom";
 import "./style.css";
 
+console.log("API URL:", process.env.REACT_APP_API_URL);
+
 const SECRET_TOKEN = "tajni_token_za_prijavljene";
 
 const App = () => {
@@ -19,7 +21,8 @@ const App = () => {
   const [userRole, setUserRole] = useState("user");
 
   useEffect(() => {
-    const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
+    const apiUrl =
+      process.env.REACT_APP_API_URL || "http://158.179.216.162:5000";
     fetch(`${apiUrl}/get_events`)
       .then((response) => response.json())
       .then((data) => {
@@ -108,6 +111,7 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn, setUserRole }) => {
 
 const Login = ({ setIsLoggedIn, setUserRole }) => {
   const navigate = useNavigate();
+  const apiUrl = process.env.REACT_APP_API_URL || "http://158.179.216.162:5000";
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -115,7 +119,7 @@ const Login = ({ setIsLoggedIn, setUserRole }) => {
     const password = event.target[1].value;
 
     try {
-      const response = await fetch("http://localhost:5000/login", {
+      const response = await fetch(`${apiUrl}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -148,14 +152,16 @@ const Login = ({ setIsLoggedIn, setUserRole }) => {
 
 const Register = () => {
   const navigate = useNavigate();
+  const apiUrl = process.env.REACT_APP_API_URL || "http://158.179.216.162:5000";
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    // inputi su: 0 - Ime, 1 - Email, 2 - Lozinka
     const email = event.target[1].value;
     const password = event.target[2].value;
 
     try {
-      const response = await fetch("http://localhost:5000/register", {
+      const response = await fetch(`${apiUrl}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -187,7 +193,7 @@ const Register = () => {
 };
 
 const Events = ({ events, setEvents, isLoggedIn, userRole }) => {
-  const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
+  const apiUrl = process.env.REACT_APP_API_URL || "http://158.179.216.162:5000";
 
   const handleDelete = async (title) => {
     if (
@@ -245,12 +251,12 @@ const AddEvent = ({ events, setEvents }) => {
   const [image, setImage] = useState("");
   const [description, setDescription] = useState("");
   const navigate = useNavigate();
+  const apiUrl = process.env.REACT_APP_API_URL || "http://158.179.216.162:5000";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newEvent = { title, image, description };
-    const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
     try {
       const response = await fetch(`${apiUrl}/send_event`, {

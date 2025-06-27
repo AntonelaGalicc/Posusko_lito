@@ -11,7 +11,8 @@ const AddEvent = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
+    const apiUrl =
+      process.env.REACT_APP_API_URL || "http://158.179.216.162:5000";
 
     // Kreiraj objekt događaja
     const newEvent = {
